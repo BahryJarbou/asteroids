@@ -53,11 +53,13 @@ class Player(CircleShape):
     
     def move(self, dt):
         forward = pygame.Vector2(0, 1).rotate(self.rotation)
-        self.position += forward * PLAYER_SPEED * self.acceleration * dt
-        if self.acceleration < 2:
-            self.acceleration += 0.01
-            clock = pygame.time.Clock()
-            clock.tick(60)
+        movement = forward * PLAYER_SPEED * self.acceleration * dt
+        if (self.position + movement).x  < SCREEN_WIDTH - self.radius and (self.position +movement).x > self.radius and (self.position + movement).y < SCREEN_HEIGHT-self.radius and (self.position +movement).y > self.radius:
+            self.position += movement
+            if self.acceleration < 2:
+                self.acceleration += 0.01
+                clock = pygame.time.Clock()
+                clock.tick(60)
     
     def shoot(self):
         if self.shot_timer <= 0:
