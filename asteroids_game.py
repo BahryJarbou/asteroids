@@ -24,6 +24,7 @@ def main():
     pygame.mixer.init()
     boom = pygame.mixer.Sound("explosion.wav")
     shielded = pygame.mixer.Sound("shield.wav")
+    spedup = pygame.mixer.Sound("speedup.wav")
     # print("Starting asteroids!")
     # print("Screen width:", SCREEN_WIDTH)
     # print("Screen height:", SCREEN_HEIGHT)
@@ -139,8 +140,10 @@ def main():
         
         for object in powerups:
             if object.check_collision(player):
-                if not muted:
+                if not muted and object.powerup == "shield":
                     shielded.play()
+                if not muted and object.powerup == "speedup":
+                    spedup.play()
                 active_powerup = 0
                 if object.powerup == "shield":
                     player.shielded = True
