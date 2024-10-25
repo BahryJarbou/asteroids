@@ -1,3 +1,6 @@
 venv/
 __pycache__/
 *.Identifier
+dist/
+asteroids_game.py
+

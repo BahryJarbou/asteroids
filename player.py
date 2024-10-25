@@ -9,9 +9,11 @@ class Player(CircleShape):
         self.rotation = 0
         self.shot_timer = 0
         self.lives = LIVES
-        self.acceleration = 0.1
-        self.direction_change = "up"
-    
+        self.init_acceleration = 0.1
+        self.acceleration = self.init_acceleration
+        self.shielded = False
+
+            
     # in the player class
     def triangle(self):
         forward = pygame.Vector2(0, 1).rotate(self.rotation)
@@ -23,6 +25,8 @@ class Player(CircleShape):
     
     def draw(self, screen):
         pygame.draw.polygon(screen, "white", self.triangle(), 2)
+        if self.shielded:
+            pygame.draw.circle(screen, "white",self.position,self.radius*2, 2)
         
     def rotate(self, dt):
         self.rotation += PLAYER_TURN_SPEED * dt
@@ -45,12 +49,12 @@ class Player(CircleShape):
         
         if True not in keys:
             if self.acceleration > 0.1 :
-                self.acceleration = 0.1
+                self.acceleration = self.init_acceleration
     
     def move(self, dt):
         forward = pygame.Vector2(0, 1).rotate(self.rotation)
         self.position += forward * PLAYER_SPEED * self.acceleration * dt
-        if self.acceleration < 3:
+        if self.acceleration < 2:
             self.acceleration += 0.01
             clock = pygame.time.Clock()
             clock.tick(60)
@@ -58,11 +62,16 @@ class Player(CircleShape):
     def shoot(self):
         if self.shot_timer <= 0:
             x, y = self.position
-            shot = Shot(x, y)
-            shot.velocity = pygame.Vector2(0,1).rotate(self.rotation) * PLAYER_SHOT_SPEED
+            pellet_1 = Shot(x, y)
+            pellet_2 = Shot(x, y)
+            pellet_3 = Shot(x, y)
+            pellet_1.velocity = pygame.Vector2(0,1).rotate(self.rotation+30) * PLAYER_SHOT_SPEED
+            pellet_2.velocity = pygame.Vector2(0,1).rotate(self.rotation) * PLAYER_SHOT_SPEED
+            pellet_3.velocity = pygame.Vector2(0,1).rotate(self.rotation-30) * PLAYER_SHOT_SPEED
             self.shot_timer = PLAYER_SHOOT_COOLDOWN
     
     def respawn(self):
         self.position = (SCREEN_WIDTH/2, SCREEN_HEIGHT/2)
         self.lives -= 1
+    
         
